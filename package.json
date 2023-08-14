@@ -1,0 +1,38 @@
+{
+  "name": "nestjs-audit",
+  "version": "1.0.0",
+  "description": "A NestJS module that helps you keep audit data in different storages for your platform.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./dist && tsc",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appstellar-team/nestjs-audit"
+  },
+  "keywords": [
+    "NestJS",
+    "Audit",
+    "Logger"
+  ],
+  "author": "Erudit Morina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/appstellar-team/nestjs-audit/issues"
+  },
+  "homepage": "https://github.com/appstellar-team/nestjs-audit#readme",
+  "dependencies": {
+    "@nestjs/common": "^10.1.3",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint": "^8.47.0",
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
+  }
+}
