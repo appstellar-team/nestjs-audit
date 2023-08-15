@@ -53,7 +53,7 @@ export class AuditService {
     }
   }
 
-  log(data: AuditLogger, req: any): void {
+  async log(data: AuditLogger, req: any): Promise<void> {
     Logger.log('Auditing...');
 
     this.setAction(MethodToAction[req.method]);
@@ -63,11 +63,13 @@ export class AuditService {
       this.addTransport('console');
     }
 
-    this.transports.forEach(async (transport) => {
+    const transportPromises: Array<any> = [];
+    this.transports.forEach((transport) => {
       Logger.log(`Emitting data to "${transport.name}"`);
-      await transport.emit(payload);
+      transportPromises.push(transport.emit(payload));
     });
 
+    await Promise.all(transportPromises);
     Logger.log('Auditing complete!');
   }
 
