@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/appstellar-team/nestjs-audit#readme",
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.391.0",
+    "mongoose": "^7.4.3",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {

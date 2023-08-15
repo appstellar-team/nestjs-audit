@@ -5,7 +5,11 @@ import {
   AuditLogger,
   Outcome,
 } from './audit.interface';
-import { ConsoleTransportOptions } from './transports.interface';
+import {
+  ConsoleTransportOptions,
+  MongooseTransportOptions,
+  SNSTransportOptions,
+} from './transports.interface';
 
 export {
   Action,
@@ -15,4 +19,6 @@ export {
   AuditData,
   Outcome,
   ConsoleTransportOptions,
+  SNSTransportOptions,
+  MongooseTransportOptions,
 };

@@ -34,6 +34,20 @@ export class AuditService {
       case 'console':
         this.transports.push(new Transports.ConsoleTransport(options));
         break;
+      case 'mongoose':
+        if (!options.connectionString) {
+          Logger.error('Missing argument "connectionString"!');
+          return;
+        }
+        this.transports.push(new Transports.MongooseTransport(options));
+        break;
+      case 'sns':
+        if (!options.client || !options.snsTopicArn) {
+          Logger.error('Missing argument "client" or "snsTopicArn"!');
+          return;
+        }
+        this.transports.push(new Transports.SNSTransport(options));
+        break;
       default:
         Logger.error(`Transport method "${name}" not supported yet!`);
     }
