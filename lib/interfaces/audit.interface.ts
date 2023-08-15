@@ -12,7 +12,7 @@ export interface AuditConfig {
       options?: any;
     },
   ];
-  userId?: (req: any) => string;
+  getUserId?: (req: any) => string;
   logErrors?: boolean;
 }
 

@@ -6,8 +6,8 @@ import * as Transports from './transports';
 @Injectable()
 export class AuditService {
   private action!: Action;
-  private userId!: (req: any) => string;
-  private repsonseObjectId!: (req: any) => string;
+  private getUserId!: (req: any) => string;
+  private getResponseObjectId!: (req: any) => string;
   private entityName!: string;
 
   logErrors = false;
@@ -17,12 +17,12 @@ export class AuditService {
     this.action = action;
   }
 
-  setUserId(callback: any): void {
-    this.userId = callback;
+  setUserIdCallback(callback: any): void {
+    this.getUserId = callback;
   }
 
-  setResponseObjectId(callback: any): void {
-    this.repsonseObjectId = callback;
+  setResponseObjectIdCallback(callback: any): void {
+    this.getResponseObjectId = callback;
   }
 
   setEntityName(name: string): void {
@@ -73,10 +73,11 @@ export class AuditService {
 
   constructData(data: AuditLogger, req: any): AuditData {
     return {
-      userId: data.params.userId?.(req) || this.userId?.(req),
+      userId: data.params.getUserId?.(req) || this.getUserId?.(req),
       action: data.params.action || this.action,
       objectId:
-        data.params.responseObjectId?.(req) || this.repsonseObjectId?.(req),
+        data.params.getResponseObjectId?.(req) ||
+        this.getResponseObjectId?.(req),
       entity: data.params.entity || this.entityName,
       outcome: data.outcome,
       error: data.err && `${data.err?.name} ${data.err?.message}`,

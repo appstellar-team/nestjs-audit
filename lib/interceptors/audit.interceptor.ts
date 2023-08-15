@@ -28,13 +28,13 @@ export class AuditInterceptor implements NestInterceptor {
     ]);
 
     return next.handle().pipe(
-      catchError((err) => {
+      catchError(async (err) => {
         if (this.audit.logErrors)
-          this.audit.log({ params, outcome: Outcome.FAILURE, err }, req);
+          await this.audit.log({ params, outcome: Outcome.FAILURE, err }, req);
         throw err;
       }),
-      tap(() => {
-        this.audit.log({ params, outcome: Outcome.SUCCESS }, req);
+      tap(async () => {
+        await this.audit.log({ params, outcome: Outcome.SUCCESS }, req);
       }),
     );
   }

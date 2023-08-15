@@ -26,7 +26,7 @@ export class AuditModule {
         });
 
         if (config.logErrors) auditService.logErrors = config.logErrors;
-        if (config.userId) auditService.setUserId(config.userId);
+        if (config.getUserId) auditService.setUserIdCallback(config.getUserId);
 
         return auditService;
       },

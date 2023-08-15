@@ -9,7 +9,7 @@ export enum Action {
 
 export interface AuditParams {
   action?: Action;
-  userId?: (req: any) => string;
-  responseObjectId?: (req: any) => string;
+  getUserId?: (req: any) => string;
+  getResponseObjectId?: (req: any) => string;
   entity?: string;
 }
