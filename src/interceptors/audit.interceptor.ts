@@ -2,13 +2,15 @@ import {
   CallHandler,
   ExecutionContext,
   Inject,
+  Injectable,
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, catchError, tap } from 'rxjs';
 import { AuditService } from '../audit.service';
 import { Reflector } from '@nestjs/core';
-import { AuditParams } from '../interfaces';
+import { AuditParams, Outcome } from '../interfaces';
 
+@Injectable()
 export class AuditInterceptor implements NestInterceptor {
   constructor(
     @Inject(AuditService) private audit: AuditService,
@@ -27,10 +29,12 @@ export class AuditInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       catchError((err) => {
+        if (this.audit.logErrors)
+          this.audit.log({ params, outcome: Outcome.FAILURE, err }, req);
         throw err;
       }),
       tap(() => {
-        this.audit.log();
+        this.audit.log({ params, outcome: Outcome.SUCCESS }, req);
       }),
     );
   }
