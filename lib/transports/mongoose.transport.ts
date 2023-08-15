@@ -25,7 +25,6 @@ export default class MongooseTransport {
   }
 
   async emit(data: AuditData): Promise<void> {
-    console.log(data);
     try {
       // Connect to MongoDB
       await connect(this.options.connectionString);

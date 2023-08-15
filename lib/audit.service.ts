@@ -59,16 +59,16 @@ export class AuditService {
     this.setAction(MethodToAction[req.method]);
     const payload = this.constructData(data, req);
 
-    console.log('Transports: ', this.transports);
-
     if (this.transports.length === 0) {
       this.addTransport('console');
     }
 
     this.transports.forEach(async (transport) => {
-      console.log('emitting...');
+      Logger.log(`Emitting data to "${transport.name}"`);
       await transport.emit(payload);
     });
+
+    Logger.log('Auditing complete!');
   }
 
   constructData(data: AuditLogger, req: any): AuditData {
