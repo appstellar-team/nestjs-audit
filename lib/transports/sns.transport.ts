@@ -1,7 +1,7 @@
 import { PublishCommand, PublishCommandOutput } from '@aws-sdk/client-sns';
-import { AuditData, SNSTransportOptions } from '../interfaces';
+import { AuditData, SNSTransportOptions, Transports } from '../interfaces';
 
-export default class SNSTransport {
+export default class SNSTransport implements Transports {
   options: SNSTransportOptions;
   name = 'sns';
 
@@ -13,7 +13,7 @@ export default class SNSTransport {
     await this.publish(this.options, JSON.stringify(data));
   }
 
-  async publish(
+  private async publish(
     options: SNSTransportOptions,
     message: string,
   ): Promise<PublishCommandOutput> {

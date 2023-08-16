@@ -1,13 +1,13 @@
 import { Schema, connect, model } from 'mongoose';
-import { AuditData, MongooseTransportOptions } from '../interfaces';
+import { AuditData, MongooseTransportOptions, Transports } from '../interfaces';
 import { Logger } from '@nestjs/common';
 
-export default class MongooseTransport {
+export default class MongooseTransport implements Transports {
   options: MongooseTransportOptions;
   name = 'mongoose';
 
   // Create a Schema corresponding to the document interface.
-  auditSchema = new Schema<AuditData>({
+  private auditSchema = new Schema<AuditData>({
     userId: String,
     action: { type: String, required: true },
     objectId: String,
@@ -18,7 +18,7 @@ export default class MongooseTransport {
   });
 
   // Create a Model
-  Audit = model<AuditData>('Audit', this.auditSchema);
+  private Audit = model<AuditData>('Audit', this.auditSchema);
 
   constructor(options: MongooseTransportOptions) {
     this.options = options;
@@ -34,7 +34,7 @@ export default class MongooseTransport {
     }
   }
 
-  async insertDocument(data: AuditData): Promise<void> {
+  private async insertDocument(data: AuditData): Promise<void> {
     const audit = new this.Audit({
       userId: data.userId,
       action: data.action,

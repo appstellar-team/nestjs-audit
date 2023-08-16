@@ -9,9 +9,9 @@ export class AuditService {
   private getUserId!: (req: any) => string;
   private getResponseObjectId!: (req: any) => string;
   private entityName!: string;
+  private transports: Array<any> = [];
 
-  logErrors = false;
-  transports: Array<any> = [];
+  public logErrors = false;
 
   setAction(action: Action): void {
     this.action = action;
@@ -73,7 +73,7 @@ export class AuditService {
     Logger.log('Auditing complete!');
   }
 
-  constructData(data: AuditLogger, req: any): AuditData {
+  private constructData(data: AuditLogger, req: any): AuditData {
     return {
       userId: data.params.getUserId?.(req) || this.getUserId?.(req),
       action: data.params.action || this.action,

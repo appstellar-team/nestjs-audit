@@ -9,6 +9,7 @@ import {
   ConsoleTransportOptions,
   MongooseTransportOptions,
   SNSTransportOptions,
+  Transports,
 } from './transports.interface';
 
 export {
@@ -21,4 +22,5 @@ export {
   ConsoleTransportOptions,
   SNSTransportOptions,
   MongooseTransportOptions,
+  Transports,
 };

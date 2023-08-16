@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { AuditData, ConsoleTransportOptions } from '../interfaces';
+import { AuditData, ConsoleTransportOptions, Transports } from '../interfaces';
 
-export default class ConsoleTransport {
+export default class ConsoleTransport implements Transports {
   options: ConsoleTransportOptions | undefined;
   name = 'console';
 
