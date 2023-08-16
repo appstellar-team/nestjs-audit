@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Action, AuditData, AuditLogger } from './interfaces';
+import {
+  Action,
+  AuditData,
+  AuditLogger,
+  TransportMethods,
+  TransportOptions,
+  Transport,
+} from './interfaces';
 import MethodToAction from './http-method-mapper';
-import * as Transports from './transports';
 
 @Injectable()
 export class AuditService {
@@ -9,7 +15,7 @@ export class AuditService {
   private getUserId!: (req: any) => string;
   private getResponseObjectId!: (req: any) => string;
   private entityName!: string;
-  private transports: Array<any> = [];
+  private transports: Array<Transport> = [];
 
   public logErrors = false;
 
@@ -29,28 +35,14 @@ export class AuditService {
     this.entityName = name;
   }
 
-  addTransport(name: string, options: any = {}): void {
-    switch (name) {
-      case 'console':
-        this.transports.push(new Transports.ConsoleTransport(options));
-        break;
-      case 'mongoose':
-        if (!options.connectionString) {
-          Logger.error('Missing argument "connectionString"!');
-          return;
-        }
-        this.transports.push(new Transports.MongooseTransport(options));
-        break;
-      case 'sns':
-        if (!options.client || !options.snsTopicArn) {
-          Logger.error('Missing argument "client" or "snsTopicArn"!');
-          return;
-        }
-        this.transports.push(new Transports.SNSTransport(options));
-        break;
-      default:
+  addTransport(name: TransportMethods, options?: TransportOptions): void {
+    import(`./transports/${name}.transport`)
+      .then((transport) => {
+        this.transports.push(new transport.default(options));
+      })
+      .catch(() => {
         Logger.error(`Transport method "${name}" not supported yet!`);
-    }
+      });
   }
 
   async log(data: AuditLogger, req: any): Promise<void> {
@@ -60,10 +52,10 @@ export class AuditService {
     const payload = this.constructData(data, req);
 
     if (this.transports.length === 0) {
-      this.addTransport('console');
+      this.addTransport(TransportMethods.CONSOLE);
     }
 
-    const transportPromises: Array<any> = [];
+    const transportPromises: Array<void> = [];
     this.transports.forEach((transport) => {
       Logger.log(`Emitting data to "${transport.name}"`);
       transportPromises.push(transport.emit(payload));

@@ -1,9 +1,14 @@
 import { Logger } from '@nestjs/common';
-import { AuditData, ConsoleTransportOptions, Transports } from '../interfaces';
+import {
+  AuditData,
+  ConsoleTransportOptions,
+  TransportMethods,
+  Transport,
+} from '../interfaces';
 
-export default class ConsoleTransport implements Transports {
-  options: ConsoleTransportOptions | undefined;
-  name = 'console';
+export default class ConsoleTransport implements Transport {
+  options?: ConsoleTransportOptions;
+  name = TransportMethods.CONSOLE;
 
   constructor(options?: ConsoleTransportOptions) {
     this.options = options;
