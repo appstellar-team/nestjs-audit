@@ -1,5 +1,5 @@
 import { Action, AuditParams } from './audit-params.interface';
-import { TransportMethods, TransportOptions } from './transports.interface';
+import { BaseTransport } from './transports.interface';
 
 export enum Outcome {
   SUCCESS = 'SUCCESS',
@@ -7,12 +7,7 @@ export enum Outcome {
 }
 
 export interface AuditConfig {
-  transports: [
-    {
-      name: TransportMethods;
-      options?: TransportOptions;
-    },
-  ];
+  transports: BaseTransport[];
   getUserId?: (req: any) => string;
   logErrors?: boolean;
 }

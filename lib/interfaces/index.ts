@@ -12,6 +12,7 @@ import {
   TransportMethods,
   TransportOptions,
   Transport,
+  BaseTransport,
 } from './transports.interface';
 
 export {
@@ -24,6 +25,7 @@ export {
   ConsoleTransportOptions,
   SNSTransportOptions,
   MongooseTransportOptions,
+  BaseTransport,
   Transport,
   TransportMethods,
   TransportOptions,
