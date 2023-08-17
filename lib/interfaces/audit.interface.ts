@@ -1,5 +1,5 @@
 import { Action, AuditParams } from './audit-params.interface';
-import { TransportMethods, TransportOptions } from './transports.interface';
+import { BaseTransport } from './transports.interface';
 
 export enum Outcome {
   SUCCESS = 'SUCCESS',
@@ -20,12 +20,7 @@ export interface AuditConfig {
    * `transports: [{ name: TransportMethods.CONSOLE, options: { logger: new ConsoleLogger() } }];`
    *
    */
-  transports: [
-    {
-      name: TransportMethods;
-      options?: TransportOptions;
-    },
-  ];
+  transports: BaseTransport[];
   /**
    * A callback function that returns the user id who is performing the request based on a given input.
    *

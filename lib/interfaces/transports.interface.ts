@@ -7,9 +7,12 @@ export enum TransportMethods {
   SNS = 'sns',
 }
 
-export interface Transport {
+export interface BaseTransport {
   name: TransportMethods;
   options?: TransportOptions;
+}
+
+export interface Transport extends BaseTransport {
   emit(data: AuditData): void;
 }
 
