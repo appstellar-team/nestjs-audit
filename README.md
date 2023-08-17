@@ -78,10 +78,10 @@ After properly importing the module, we can inject our `AuditService` anywhere t
 This can be done to set the audit configurations in service level.
 
 ```ts
+// app.service.ts
 import { AuditService, TransportMethods } from 'nestjs-audit';
 
 @Injectable()
-// app.service.ts
 class SomeService {
   constructor(private readonly audit: AuditService) {
     // just examples of setting audit configs in service level
