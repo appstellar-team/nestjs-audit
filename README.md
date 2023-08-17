@@ -4,7 +4,7 @@ An audit module for Nest framework to keep audit data for web requests.
 
 ## Installation
 
-NPM
+Npm
 
 ```bash
 npm install nestjs-audit
@@ -16,9 +16,9 @@ Yarn
 yarn add nestjs-audit
 ```
 
-## Usage
+## Getting Started
 
-First, let's register the nestjs-audit in `app.module.ts`
+First, let's register the nestjs-audit in `app.module.ts` by including it in imports.
 
 ```ts
 // app.module.ts
@@ -31,14 +31,16 @@ import { AuditModule } from 'nestjs-audit';
 export class AppModule {}
 ```
 
-If the following configurations are needed on module level:
+The following configurations can be set on the app module level:
 
 - set transports
-- configure to audit failed requests
-  or
-- configure a method that returns the user (actor) who is performing requests
+- enable audit data for failed requests
+  and
+- provide a callback that returns the user (actor) who is performing requests
 
-we can make the configurations while importing the module:
+Each service, controller or route that is part of that module will then inherit the same configurations and this way we avoid duplicating code.
+
+To set module level configurations, pass the needed options while importing the module:
 
 ```ts
 // app.module.ts
@@ -75,7 +77,7 @@ export class AppModule {}
 ---
 
 After properly importing the module, we can inject our `AuditService` anywhere that's needed.
-This can be done to set the audit configurations in service level.
+This can be done to set the audit configurations in service level so the same configurations will be inherited by controllers that have the specific service injected.
 
 ```ts
 // app.service.ts
@@ -84,7 +86,7 @@ import { AuditService, TransportMethods } from 'nestjs-audit';
 @Injectable()
 class SomeService {
   constructor(private readonly audit: AuditService) {
-    // just examples of setting audit configs in service level
+    // examples of setting audit options in service level
     audit.addTransport(TransportMethods.CONSOLE);
     audit.setUserIdCallback((req) => req.headers.user.id);
     audit.logErrors = true;
@@ -92,9 +94,9 @@ class SomeService {
 }
 ```
 
-## Decorator
+## Decorator Usage
 
-In order to enable auditing for requests, `@Audit()` decorator needs to be used in the controller level for routes that we need to keep audit data.
+In order to enable auditing for requests, `@Audit()` decorator has to be used in the controller level for routes that we need to keep audit data for.
 
 ```ts
 // app.controller.ts
@@ -113,7 +115,7 @@ export class SomeController {
 }
 ```
 
-If audit is not configured in module or service level, it can be done for each route specifically by passing audit parameters in the decorator:
+If audit options are not set in module or service level, it can be done for each route specifically by passing audit parameters in the decorator:
 
 ```ts
 // app.controller.ts
@@ -130,6 +132,10 @@ getData() {
   // some code
 }
 ```
+
+## Contributing
+
+Pull requests are welcomed. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
