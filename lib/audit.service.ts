@@ -59,9 +59,9 @@ export class AuditService {
    * Defines a function that returns the object id based on a given input.
    *
    * @example
-   * `const getResponseObjectId = this.auditService.setResponseObjectIdCallback((req) => req.headers.object.id);`
+   * `const getResponseObjectId = this.auditService.setResponseObjectIdCallback((res) => res.object.id);`
    *
-   * @param callback function which returns user id
+   * @param callback function which returns response object id
    *
    */
   setResponseObjectIdCallback(callback: any): void {

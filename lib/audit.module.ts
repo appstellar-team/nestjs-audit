@@ -14,7 +14,7 @@ export class AuditModule {
   /**
    * Provide audit service with options set at module level.
    *
-   * @param config transport name and options
+   * @param config transport name and other options
    * @returns `ModuleMetadata` for Audit module
    *
    */
