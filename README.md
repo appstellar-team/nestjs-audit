@@ -105,7 +105,7 @@ In order to enable auditing for requests, `@Audit()` decorator has to be used in
 @Audit()
 @Controller()
 export class SomeController {
-  constructor(private readonly someService: someService) {}
+  constructor(private readonly someService: SomeService) {}
 
   @Get()
   // @Audit()
