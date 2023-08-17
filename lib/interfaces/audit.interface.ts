@@ -12,8 +12,8 @@ export enum Outcome {
  */
 export interface AuditConfig {
   /**
-   * A list of transport methods that specifies where audit data will be saved.
-   * The list accepts objects containing a required name parameter for the transport
+   * A list of transport methods that specify where audit data will be saved.
+   * The list accepts BaseTransport objects containing a required name parameter for the transport
    * and an optional options parameter to define transport options
    *
    * @example
