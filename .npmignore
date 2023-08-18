@@ -1,0 +1,8 @@
+# source
+**/*.ts
+*.ts
+
+# configuration
+package-lock.json
+tsconfig.json
+.prettierrc
