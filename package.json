@@ -1,6 +1,6 @@
 {
   "name": "@appstellar-team/nestjs-audit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A NestJS module that helps you keep audit data in different storages for your platform.",
   "main": "dist/index.js",
   "scripts": {
