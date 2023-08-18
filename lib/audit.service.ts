@@ -9,6 +9,10 @@ import {
 } from './interfaces';
 import MethodToAction from './http-method-mapper';
 
+/**
+ * Service class providing audit capabilities.
+ *
+ */
 @Injectable()
 export class AuditService {
   private action!: Action;
@@ -17,24 +21,76 @@ export class AuditService {
   private entityName!: string;
   private transports: Array<Transport> = [];
 
+  /**
+   * Whether to keep audit logs for failed requests. Defaults to `false`.
+   *
+   * @default false
+   *
+   */
   public logErrors = false;
 
+  /**
+   * Set action value to one of the provided `Action` values.
+   *
+   * @example
+   * `const action = this.auditService.setAction(Action.CREATE);`
+   *
+   * @param action value to set
+   *
+   */
   setAction(action: Action): void {
     this.action = action;
   }
 
+  /**
+   * Defines a function that returns the user id based on a given input.
+   *
+   * @example
+   * `const getUserId = this.auditService.setUserIdCallback((req) => req.headers.user.id);`
+   *
+   * @param callback function which returns user id
+   *
+   */
   setUserIdCallback(callback: any): void {
     this.getUserId = callback;
   }
 
+  /**
+   * Defines a function that returns the object id based on a given input.
+   *
+   * @example
+   * `const getResponseObjectId = this.auditService.setResponseObjectIdCallback((res) => res.object.id);`
+   *
+   * @param callback function which returns response object id
+   *
+   */
   setResponseObjectIdCallback(callback: any): void {
     this.getResponseObjectId = callback;
   }
 
+  /**
+   * Sets the name of entity where a request is performed.
+   *
+   * @example
+   * `const entityName = this.auditService.setEntityName('users');`
+   *
+   * @param name entity
+   *
+   */
   setEntityName(name: string): void {
     this.entityName = name;
   }
 
+  /**
+   * Specify where audit data will be saved.
+   *
+   * @example
+   * `this.auditService.addTransport(TransportMethods.CONSOLE, { logger: new ConsoleLogger() });`
+   *
+   * @param name one of TransportMethods enum values
+   * @param options additional trnasport information like connection string for database transport or topic arn for sns transport
+   *
+   */
   addTransport(name: TransportMethods, options?: TransportOptions): void {
     import(`./transports/${name}.transport`)
       .then((transport) => {
