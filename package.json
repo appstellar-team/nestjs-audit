@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-audit",
+  "name": "@appstellar-team/nestjs-audit",
   "version": "1.0.0",
   "description": "A NestJS module that helps you keep audit data in different storages for your platform.",
   "main": "dist/index.js",
@@ -10,7 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/appstellar-team/nestjs-audit"
+    "url": "https://github.com/appstellar-team/nestjs-audit.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "NestJS",
