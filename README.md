@@ -7,13 +7,13 @@ An audit module for Nest framework to keep audit data for web requests.
 Npm
 
 ```bash
-npm install @appstellar-team/nestjs-audit
+npm install @appstellar/nestjs-audit
 ```
 
 Yarn
 
 ```bash
-yarn add @appstellar-team/nestjs-audit
+yarn add @appstellar/nestjs-audit
 ```
 
 ## Getting Started
@@ -23,7 +23,7 @@ First, let's register the nestjs-audit in `app.module.ts` by including it in imp
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { AuditModule } from '@appstellar-team/nestjs-audit';
+import { AuditModule } from '@appstellar/nestjs-audit';
 
 @Module({
   imports: [AuditModule],
@@ -45,7 +45,7 @@ To set module level configurations, pass the needed options while importing the 
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { AuditModule, TransportMethods } from '@appstellar-team/nestjs-audit';
+import { AuditModule, TransportMethods } from '@appstellar/nestjs-audit';
 // only if sns transport is needed
 import { SNSClient } from '@aws-sdk/client-sns';
 
@@ -81,7 +81,7 @@ This can be done to set the audit configurations in service level so the same co
 
 ```ts
 // app.service.ts
-import { AuditService, TransportMethods } from '@appstellar-team/nestjs-audit';
+import { AuditService, TransportMethods } from '@appstellar/nestjs-audit';
 
 @Injectable()
 class SomeService {
@@ -100,7 +100,7 @@ In order to enable auditing for requests, `@Audit()` decorator has to be used in
 
 ```ts
 // app.controller.ts
-import { Audit } from '@appstellar-team/nestjs-audit';
+import { Audit } from '@appstellar/nestjs-audit';
 
 // can be passed to each route specifically if there are routes that we don't need to keep audit for
 @Audit()
@@ -120,7 +120,7 @@ If audit options are not set in module or service level, it can be done for each
 
 ```ts
 // app.controller.ts
-import { Action, Audit } from '@appstellar-team/nestjs-audit';
+import { Action, Audit } from '@appstellar/nestjs-audit';
 
 @Get()
 @Audit({
