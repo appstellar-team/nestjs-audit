@@ -30,6 +30,17 @@ export class AuditService {
   public logErrors = false;
 
   /**
+   * Get action value
+   *
+   * @example
+   * `const action = this.auditService.getAction();`
+   *
+   */
+  getAction(): Action {
+    return this.action;
+  }
+
+  /**
    * Set action value to one of the provided `Action` values.
    *
    * @example
@@ -40,6 +51,17 @@ export class AuditService {
    */
   setAction(action: Action): void {
     this.action = action;
+  }
+
+  /**
+   * Get the function that returns the user id
+   *
+   * @example
+   * `const getUserId = this.auditService.getUserIdCallback();`
+   *
+   */
+  getUserIdCallback(): (req: any) => string {
+    return this.getUserId;
   }
 
   /**
@@ -56,6 +78,17 @@ export class AuditService {
   }
 
   /**
+   * Get the function that returns the response object id
+   *
+   * @example
+   * `const getResponseObjectId = this.auditService.getResponseObjectIdCallback();`
+   *
+   */
+  getResponseObjectIdCallback(): (req: any) => string {
+    return this.getResponseObjectId;
+  }
+
+  /**
    * Defines a function that returns the object id based on a given input.
    *
    * @example
@@ -69,6 +102,17 @@ export class AuditService {
   }
 
   /**
+   * Get entity name
+   *
+   * @example
+   * `const entityName = this.auditService.getEntityName();`
+   *
+   */
+  getEntityName(): string {
+    return this.entityName;
+  }
+
+  /**
    * Sets the name of entity where a request is performed.
    *
    * @example
@@ -79,6 +123,17 @@ export class AuditService {
    */
   setEntityName(name: string): void {
     this.entityName = name;
+  }
+
+  /**
+   * Get list of transport options
+   *
+   * @example
+   * `const transports = this.auditService.getTransports();`
+   *
+   */
+  getTransports(): Array<Transport> {
+    return this.transports;
   }
 
   /**
