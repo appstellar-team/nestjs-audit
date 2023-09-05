@@ -16,7 +16,7 @@ describe('Audit Service', () => {
     action: Action.READ,
     getUserId: () => faker.string.uuid(),
     getResponseObjectId: () => faker.string.uuid(),
-    entity: 'users',
+    entity: faker.string.alpha(),
   };
 
   const mockAuditLogger: AuditLogger = {
@@ -70,7 +70,7 @@ describe('Audit Service', () => {
   });
 
   it('should set the name of entity', () => {
-    const entityName = 'users';
+    const entityName = faker.string.alpha();
     auditService.setEntityName(entityName);
     expect(auditService.getEntityName()).toBeDefined();
     expect(auditService.getEntityName()).toBe(entityName);
