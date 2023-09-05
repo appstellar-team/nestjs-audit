@@ -2,8 +2,13 @@ import { Test } from '@nestjs/testing';
 import { AuditModule } from '../audit.module';
 import { AuditService } from '../audit.service';
 import { TransportMethods } from '../interfaces';
+import { faker } from '@faker-js/faker';
 
 describe('Audit Module', () => {
+  afterAll(() => {
+    jest.resetModules();
+  });
+
   it('should import audit module succesfully', async () => {
     const module = await Test.createTestingModule({
       imports: [AuditModule],
@@ -20,7 +25,7 @@ describe('Audit Module', () => {
       imports: [
         AuditModule.forRoot({
           transports: [{ name: TransportMethods.CONSOLE }],
-          getUserId: () => 'user-id',
+          getUserId: () => faker.string.uuid(),
           logErrors: true,
         }),
       ],
