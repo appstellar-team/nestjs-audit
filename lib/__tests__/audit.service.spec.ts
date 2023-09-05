@@ -28,6 +28,10 @@ describe('Audit Service', () => {
     auditService = new AuditService();
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should set logErrors to true', () => {
     auditService.logErrors = true;
     expect(auditService.logErrors).toBeTruthy();
