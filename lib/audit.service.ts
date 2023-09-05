@@ -6,6 +6,7 @@ import {
   TransportMethods,
   TransportOptions,
   Transport,
+  BaseTransport,
 } from './interfaces';
 import MethodToAction from './http-method-mapper';
 
@@ -19,7 +20,7 @@ export class AuditService {
   private getUserId!: (req: any) => string;
   private getResponseObjectId!: (req: any) => string;
   private entityName!: string;
-  private transports: Array<Transport> = [];
+  private transports: Array<BaseTransport> = [];
 
   /**
    * Whether to keep audit logs for failed requests. Defaults to `false`.
@@ -132,7 +133,7 @@ export class AuditService {
    * `const transports = this.auditService.getTransports();`
    *
    */
-  getTransports(): Array<Transport> {
+  getTransports(): Array<BaseTransport> {
     return this.transports;
   }
 
@@ -147,13 +148,7 @@ export class AuditService {
    *
    */
   addTransport(name: TransportMethods, options?: TransportOptions): void {
-    import(`./transports/${name}.transport`)
-      .then((transport) => {
-        this.transports.push(new transport.default(options));
-      })
-      .catch(() => {
-        Logger.error(`Transport method "${name}" not supported yet!`);
-      });
+    this.transports.push({ name, options });
   }
 
   async log(data: AuditLogger, req: any): Promise<void> {
@@ -167,13 +162,21 @@ export class AuditService {
     }
 
     const transportPromises: Array<void> = [];
-    this.transports.forEach((transport) => {
+    this.transports.forEach(async (transport: BaseTransport) => {
+      const transportClass = await this.importTransportClass(transport);
       Logger.log(`Emitting data to "${transport.name}"`);
-      transportPromises.push(transport.emit(payload));
+      transportPromises.push(transportClass.emit(payload));
     });
 
     await Promise.all(transportPromises);
     Logger.log('Auditing complete!');
+  }
+
+  private async importTransportClass(
+    transport: BaseTransport,
+  ): Promise<Transport> {
+    const Transport = await import(`./transports/${transport.name}.transport`);
+    return new Transport.default(transport.options);
   }
 
   private constructData(data: AuditLogger, req: any): AuditData {
