@@ -11,20 +11,6 @@ export default class MongooseTransport implements Transport {
   options: MongooseTransportOptions;
   name = TransportMethods.MONGOOSE;
 
-  // Create a Schema corresponding to the document interface.
-  private auditSchema = new Schema<AuditData>({
-    userId: String,
-    action: { type: String, required: true },
-    objectId: String,
-    entity: String,
-    outcome: { type: String, required: true },
-    error: String,
-    date: { type: Date, required: true },
-  });
-
-  // Create a Model
-  private Audit = model<AuditData>('Audit', this.auditSchema);
-
   constructor(options: MongooseTransportOptions) {
     this.options = options;
   }
@@ -42,7 +28,7 @@ export default class MongooseTransport implements Transport {
   }
 
   private async insertDocument(data: AuditData): Promise<void> {
-    const audit = new this.Audit({
+    const audit = new Audit({
       userId: data.userId,
       action: data.action,
       objectId: data.objectId,
@@ -54,3 +40,17 @@ export default class MongooseTransport implements Transport {
     await audit.save();
   }
 }
+
+// Create a Schema corresponding to the document interface.
+const auditSchema = new Schema<AuditData>({
+  userId: String,
+  action: { type: String, required: true },
+  objectId: String,
+  entity: String,
+  outcome: { type: String, required: true },
+  error: String,
+  date: { type: Date, required: true },
+});
+
+// Create a Model
+const Audit = model<AuditData>('Audit', auditSchema);
