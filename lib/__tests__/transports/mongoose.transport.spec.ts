@@ -16,15 +16,20 @@ describe('Mongoose Transport', () => {
 
   const loggerMock = jest.spyOn(Logger, 'error');
 
-  afterEach(() => {
+  const transport = new MongooseTransport({
+    connectionString: faker.string.alphanumeric(),
+  });
+
+  beforeEach(() => {
     jest.clearAllMocks();
-    jest.restoreAllMocks();
+    jest.resetAllMocks();
   });
 
   it('should fail to emit data', async () => {
-    const transport = new MongooseTransport({
-      connectionString: faker.string.alpha(),
+    jest.spyOn(mongoose, 'connect').mockImplementationOnce(() => {
+      return Promise.reject();
     });
+
     await transport.emit(mockedAuditData);
 
     expect(loggerMock).toHaveBeenCalledWith(
@@ -43,9 +48,6 @@ describe('Mongoose Transport', () => {
         return Promise.resolve(mockedAuditData);
       });
 
-    const transport = new MongooseTransport({
-      connectionString: faker.string.alpha(),
-    });
     await transport.emit(mockedAuditData);
 
     expect(loggerMock).not.toHaveBeenCalled();
