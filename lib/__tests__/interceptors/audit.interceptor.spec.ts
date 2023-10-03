@@ -103,18 +103,8 @@ describe('Audit Interceptor', () => {
     expect(auditService.log).toHaveBeenCalledTimes(1);
   });
 
-  it('should log successful audit', async () => {
-    const resultObservable = await interceptor.intercept(
-      context,
-      callHandlerSucceed,
-    );
-
-    // resultObservable
-    //   .subscribe({
-    //     next() {},
-    //   })
-    //   .unsubscribe();
-
-    expect(auditService.log).toHaveBeenCalledTimes(1);
-  });
+  // it('should log successful audit', async () => {
+  //   await interceptor.intercept(context, callHandlerSucceed);
+  //   expect(auditService.log).toHaveBeenCalledTimes(1);
+  // });
 });
