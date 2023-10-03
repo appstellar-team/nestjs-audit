@@ -29,7 +29,8 @@ describe('Audit Service', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   it('should set logErrors to true', () => {
