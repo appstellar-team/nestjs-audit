@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { AuditService } from '../../audit.service';
 import { AuditInterceptor } from '../../interceptors';
 import { of, throwError } from 'rxjs';
-import { ExecutionContext } from '@nestjs/common';
+import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('Audit Interceptor', () => {
@@ -10,13 +10,6 @@ describe('Audit Interceptor', () => {
   let auditService: AuditService;
   let reflector: Reflector;
   let context: ExecutionContext;
-
-  const callHandlerFail = {
-    handle: () => throwError(() => new Error('Error')),
-  };
-  const callHandlerSucceed = {
-    handle: () => of('SuccessData'),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,19 +32,12 @@ describe('Audit Interceptor', () => {
     }).compile();
 
     context = {
-      getArgs: jest.fn(),
-      getArgByIndex: jest.fn(),
-      switchToRpc: jest.fn(),
-      switchToWs: jest.fn(),
-      getType: jest.fn(),
       switchToHttp: () => ({
         getRequest: jest.fn().mockReturnValue({}),
-        getResponse: jest.fn(),
-        getNext: jest.fn(),
       }),
       getHandler: jest.fn().mockReturnValue({}),
       getClass: jest.fn().mockReturnValue({}),
-    };
+    } as unknown as ExecutionContext;
 
     interceptor = module.get<AuditInterceptor>(AuditInterceptor);
     auditService = module.get<AuditService>(AuditService);
@@ -67,44 +53,44 @@ describe('Audit Interceptor', () => {
     expect(interceptor).toBeDefined();
   });
 
-  it('should throw error', async () => {
-    const resultObservable = await interceptor.intercept(
-      context,
-      callHandlerFail,
-    );
+  it('should not call audit.log but throw error for failed audit', async () => {
+    const callHandler = {
+      handle: () => throwError(() => new Error('Error')),
+    } as CallHandler;
+    const resultObservable = await interceptor.intercept(context, callHandler);
 
     resultObservable
-      .subscribe({
-        error() {
-          expect(interceptor).toThrowError();
-        },
-      })
+      .subscribe(() => expect(callHandler.handle).toThrowError('Error'))
       .unsubscribe();
 
     expect(auditService.log).toHaveBeenCalledTimes(0);
   });
 
-  it('should log failed audit', async () => {
+  it('should call audit.log and throw error for failed audit', async () => {
+    const callHandler = {
+      handle: () => throwError(() => new Error('Error')),
+    } as CallHandler;
     auditService.logErrors = true;
 
-    const resultObservable = await interceptor.intercept(
-      context,
-      callHandlerFail,
-    );
+    const resultObservable = await interceptor.intercept(context, callHandler);
 
     resultObservable
-      .subscribe({
-        error() {
-          expect(interceptor).toThrowError('Error');
-        },
-      })
+      .subscribe(() => expect(callHandler.handle).toThrowError('Error'))
       .unsubscribe();
 
     expect(auditService.log).toHaveBeenCalledTimes(1);
   });
 
-  // it('should log successful audit', async () => {
-  //   await interceptor.intercept(context, callHandlerSucceed);
-  //   expect(auditService.log).toHaveBeenCalledTimes(1);
-  // });
+  it('should call audit.log for successful audit', async () => {
+    const callHandler = {
+      handle: () => of('success'),
+    } as CallHandler;
+    const resultObservable = await interceptor.intercept(context, callHandler);
+
+    resultObservable
+      .subscribe(() => expect(callHandler.handle).not.toThrow())
+      .unsubscribe();
+
+    expect(auditService.log).toHaveBeenCalledTimes(1);
+  });
 });
