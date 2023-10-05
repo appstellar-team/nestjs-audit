@@ -15,7 +15,7 @@ describe('SNS Transport', () => {
     date: new Date(),
   };
 
-  const loggerMock = jest.spyOn(Logger, 'error');
+  const loggerSpy = jest.spyOn(Logger, 'error');
   const snsMock = mockClient(SNSClient);
 
   const transport = new SNSTransport({
@@ -26,7 +26,6 @@ describe('SNS Transport', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
-
     snsMock.reset();
   });
 
@@ -35,7 +34,7 @@ describe('SNS Transport', () => {
 
     await transport.emit(mockedAuditData);
 
-    expect(loggerMock).toHaveBeenCalledWith(
+    expect(loggerSpy).toHaveBeenCalledWith(
       'Error sending message to topic. Please check if the provided arguments are correct',
     );
   });
@@ -46,6 +45,6 @@ describe('SNS Transport', () => {
     });
     await transport.emit(mockedAuditData);
 
-    expect(loggerMock).not.toHaveBeenCalled();
+    expect(loggerSpy).not.toHaveBeenCalled();
   });
 });

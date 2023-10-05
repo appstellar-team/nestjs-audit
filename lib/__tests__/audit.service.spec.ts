@@ -8,6 +8,8 @@ import {
   TransportMethods,
 } from '../interfaces';
 import { Logger } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { AuditModule } from '../audit.module';
 
 describe('Audit Service', () => {
   let auditService: AuditService;
@@ -24,8 +26,12 @@ describe('Audit Service', () => {
     outcome: Outcome.SUCCESS,
   };
 
-  beforeEach(() => {
-    auditService = new AuditService();
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      imports: [AuditModule],
+    }).compile();
+
+    auditService = module.get<AuditService>(AuditService);
   });
 
   afterEach(() => {

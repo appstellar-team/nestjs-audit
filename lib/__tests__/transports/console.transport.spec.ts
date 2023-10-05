@@ -13,7 +13,7 @@ describe('Console Transport', () => {
     date: new Date(),
   };
 
-  const loggerMock = jest.spyOn(Logger, 'log');
+  const loggerSpy = jest.spyOn(Logger, 'log');
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -23,7 +23,7 @@ describe('Console Transport', () => {
     const consoleTransport = new ConsoleTransport();
     consoleTransport.emit(mockedAuditData);
 
-    expect(loggerMock).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
+    expect(loggerSpy).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
   });
 
   it('should emit data with specifying Logger', () => {
@@ -32,6 +32,7 @@ describe('Console Transport', () => {
     });
     consoleTransport.emit(mockedAuditData);
 
-    expect(loggerMock).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
+    expect(consoleTransport.options?.logger).toBeInstanceOf(Logger);
+    expect(loggerSpy).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
   });
 });

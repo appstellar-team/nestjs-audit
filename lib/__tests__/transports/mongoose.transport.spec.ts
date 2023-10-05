@@ -14,7 +14,7 @@ describe('Mongoose Transport', () => {
     date: new Date(),
   };
 
-  const loggerMock = jest.spyOn(Logger, 'error');
+  const loggerSpy = jest.spyOn(Logger, 'error');
 
   const transport = new MongooseTransport({
     connectionString: faker.string.alphanumeric(),
@@ -32,7 +32,7 @@ describe('Mongoose Transport', () => {
 
     await transport.emit(mockedAuditData);
 
-    expect(loggerMock).toHaveBeenCalledWith(
+    expect(loggerSpy).toHaveBeenCalledWith(
       'Error connecting or inserting into database. Please check if the provided connectionString is correct',
     );
   });
@@ -50,6 +50,6 @@ describe('Mongoose Transport', () => {
 
     await transport.emit(mockedAuditData);
 
-    expect(loggerMock).not.toHaveBeenCalled();
+    expect(loggerSpy).not.toHaveBeenCalled();
   });
 });
