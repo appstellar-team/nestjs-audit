@@ -87,7 +87,7 @@ describe('Audit Service', () => {
     expect(auditService.getTransports().length).toBe(0);
   });
 
-  it('should add transport to list of transports successfully', async () => {
+  it('should add transport to list of transports successfully', () => {
     auditService.addTransport(TransportMethods.CONSOLE);
     expect(auditService.getTransports().length).toBeGreaterThan(0);
   });

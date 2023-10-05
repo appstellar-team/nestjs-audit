@@ -29,7 +29,6 @@ describe('Mongoose Transport', () => {
     jest.spyOn(mongoose, 'connect').mockImplementationOnce(() => {
       return Promise.reject();
     });
-
     await transport.emit(mockedAuditData);
 
     expect(loggerSpy).toHaveBeenCalledWith(
@@ -41,13 +40,11 @@ describe('Mongoose Transport', () => {
     jest.spyOn(mongoose, 'connect').mockImplementationOnce(() => {
       return Promise.resolve(mongoose);
     });
-
     jest
       .spyOn(mongoose.model('Audit').prototype, 'save')
       .mockImplementationOnce(() => {
         return Promise.resolve(mockedAuditData);
       });
-
     await transport.emit(mockedAuditData);
 
     expect(loggerSpy).not.toHaveBeenCalled();
