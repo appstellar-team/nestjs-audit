@@ -16,7 +16,7 @@ describe('Audit Module', () => {
     jest.resetModules();
   });
 
-  it('should import audit module succesfully', async () => {
+  it('should import audit module with default configs', async () => {
     const module = await Test.createTestingModule({
       imports: [AuditModule],
     }).compile();
@@ -28,7 +28,7 @@ describe('Audit Module', () => {
     expect(auditSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('should import audit module with forRoot configs succesfully', async () => {
+  it('should import audit module with forRoot configs', async () => {
     const module = await Test.createTestingModule({
       imports: [
         AuditModule.forRoot({

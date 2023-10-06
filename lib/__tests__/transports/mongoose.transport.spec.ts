@@ -31,6 +31,7 @@ describe('Mongoose Transport', () => {
     });
     await transport.emit(mockedAuditData);
 
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledWith(
       'Error connecting or inserting into database. Please check if the provided connectionString is correct',
     );

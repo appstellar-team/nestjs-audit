@@ -14,15 +14,15 @@ import { AuditModule } from '../audit.module';
 describe('Audit Service', () => {
   let auditService: AuditService;
 
-  const mockAuditParams: AuditParams = {
+  const mockedAuditParams: AuditParams = {
     action: Action.READ,
     getUserId: () => faker.string.uuid(),
     getResponseObjectId: () => faker.string.uuid(),
     entity: faker.string.alpha(),
   };
 
-  const mockAuditLogger: AuditLogger = {
-    params: mockAuditParams,
+  const mockedAuditLogger: AuditLogger = {
+    params: mockedAuditParams,
     outcome: Outcome.SUCCESS,
   };
 
@@ -93,11 +93,11 @@ describe('Audit Service', () => {
   });
 
   it('should keep audit logs', async () => {
-    const loggerMock = jest.spyOn(Logger, 'log');
-    await auditService.log(mockAuditLogger, { method: 'GET' });
+    const loggerSpy = jest.spyOn(Logger, 'log');
+    await auditService.log(mockedAuditLogger, { method: 'GET' });
 
     expect(auditService.getAction()).toBe(Action.READ);
     expect(auditService.getTransports().length).toBeGreaterThan(0);
-    expect(loggerMock).toHaveBeenCalledWith('Auditing complete!');
+    expect(loggerSpy).toHaveBeenCalledWith('Auditing complete!');
   });
 });

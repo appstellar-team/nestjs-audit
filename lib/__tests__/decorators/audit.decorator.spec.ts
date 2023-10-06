@@ -3,8 +3,8 @@ import { Audit } from '../../decorators';
 
 describe('Audit Decorator', () => {
   it('should apply decorator', () => {
-    const decoratorMock = jest.spyOn(nestjs, 'applyDecorators');
+    const decoratorSpy = jest.spyOn(nestjs, 'applyDecorators');
     Audit();
-    expect(decoratorMock).toHaveBeenCalled();
+    expect(decoratorSpy).toHaveBeenCalled();
   });
 });

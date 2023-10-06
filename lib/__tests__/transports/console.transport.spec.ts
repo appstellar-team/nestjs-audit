@@ -23,6 +23,7 @@ describe('Console Transport', () => {
     const consoleTransport = new ConsoleTransport();
     consoleTransport.emit(mockedAuditData);
 
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
   });
 
@@ -33,6 +34,7 @@ describe('Console Transport', () => {
     consoleTransport.emit(mockedAuditData);
 
     expect(consoleTransport.options?.logger).toBeInstanceOf(Logger);
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledWith(JSON.stringify(mockedAuditData));
   });
 });

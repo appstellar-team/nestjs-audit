@@ -34,6 +34,7 @@ describe('SNS Transport', () => {
 
     await transport.emit(mockedAuditData);
 
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledWith(
       'Error sending message to topic. Please check if the provided arguments are correct',
     );
