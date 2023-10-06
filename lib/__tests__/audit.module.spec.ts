@@ -5,7 +5,14 @@ import { TransportMethods } from '../interfaces';
 import { faker } from '@faker-js/faker';
 
 describe('Audit Module', () => {
-  afterAll(() => {
+  const auditSpy = jest.spyOn(AuditService.prototype, 'addTransport');
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+  });
+
+  afterEach(() => {
     jest.resetModules();
   });
 
@@ -18,6 +25,7 @@ describe('Audit Module', () => {
 
     expect(auditService).toBeTruthy();
     expect(auditService.logErrors).toBeFalsy();
+    expect(auditSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should import audit module with forRoot configs succesfully', async () => {
@@ -35,5 +43,7 @@ describe('Audit Module', () => {
 
     expect(auditService).toBeTruthy();
     expect(auditService.logErrors).toBeTruthy();
+    expect(auditSpy).toHaveBeenCalledTimes(1);
+    expect(auditSpy).toHaveBeenCalledWith(TransportMethods.CONSOLE, undefined);
   });
 });
