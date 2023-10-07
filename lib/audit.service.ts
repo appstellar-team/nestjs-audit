@@ -6,6 +6,7 @@ import {
   TransportMethods,
   TransportOptions,
   Transport,
+  BaseTransport,
 } from './interfaces';
 import MethodToAction from './http-method-mapper';
 
@@ -19,7 +20,7 @@ export class AuditService {
   private getUserId!: (req: any) => string;
   private getResponseObjectId!: (req: any) => string;
   private entityName!: string;
-  private transports: Array<Transport> = [];
+  private transports: Array<BaseTransport> = [];
 
   /**
    * Whether to keep audit logs for failed requests. Defaults to `false`.
@@ -28,6 +29,17 @@ export class AuditService {
    *
    */
   public logErrors = false;
+
+  /**
+   * Get action value
+   *
+   * @example
+   * `const action = this.auditService.getAction();`
+   *
+   */
+  getAction(): Action {
+    return this.action;
+  }
 
   /**
    * Set action value to one of the provided `Action` values.
@@ -40,6 +52,17 @@ export class AuditService {
    */
   setAction(action: Action): void {
     this.action = action;
+  }
+
+  /**
+   * Get the function that returns the user id
+   *
+   * @example
+   * `const getUserId = this.auditService.getUserIdCallback();`
+   *
+   */
+  getUserIdCallback(): (req: any) => string {
+    return this.getUserId;
   }
 
   /**
@@ -56,6 +79,17 @@ export class AuditService {
   }
 
   /**
+   * Get the function that returns the response object id
+   *
+   * @example
+   * `const getResponseObjectId = this.auditService.getResponseObjectIdCallback();`
+   *
+   */
+  getResponseObjectIdCallback(): (req: any) => string {
+    return this.getResponseObjectId;
+  }
+
+  /**
    * Defines a function that returns the object id based on a given input.
    *
    * @example
@@ -66,6 +100,17 @@ export class AuditService {
    */
   setResponseObjectIdCallback(callback: any): void {
     this.getResponseObjectId = callback;
+  }
+
+  /**
+   * Get entity name
+   *
+   * @example
+   * `const entityName = this.auditService.getEntityName();`
+   *
+   */
+  getEntityName(): string {
+    return this.entityName;
   }
 
   /**
@@ -82,6 +127,17 @@ export class AuditService {
   }
 
   /**
+   * Get list of transport options
+   *
+   * @example
+   * `const transports = this.auditService.getTransports();`
+   *
+   */
+  getTransports(): Array<BaseTransport> {
+    return this.transports;
+  }
+
+  /**
    * Specify where audit data will be saved.
    *
    * @example
@@ -92,13 +148,7 @@ export class AuditService {
    *
    */
   addTransport(name: TransportMethods, options?: TransportOptions): void {
-    import(`./transports/${name}.transport`)
-      .then((transport) => {
-        this.transports.push(new transport.default(options));
-      })
-      .catch(() => {
-        Logger.error(`Transport method "${name}" not supported yet!`);
-      });
+    this.transports.push({ name, options });
   }
 
   async log(data: AuditLogger, req: any): Promise<void> {
@@ -112,13 +162,21 @@ export class AuditService {
     }
 
     const transportPromises: Array<void> = [];
-    this.transports.forEach((transport) => {
+    this.transports.forEach(async (transport: BaseTransport) => {
+      const transportClass = await this.importTransportClass(transport);
       Logger.log(`Emitting data to "${transport.name}"`);
-      transportPromises.push(transport.emit(payload));
+      transportPromises.push(transportClass.emit(payload));
     });
 
     await Promise.all(transportPromises);
     Logger.log('Auditing complete!');
+  }
+
+  private async importTransportClass(
+    transport: BaseTransport,
+  ): Promise<Transport> {
+    const Transport = await import(`./transports/${transport.name}.transport`);
+    return new Transport.default(transport.options);
   }
 
   private constructData(data: AuditLogger, req: any): AuditData {
